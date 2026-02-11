@@ -1,0 +1,20 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="16" cy="16" r="16" fill="url(#grad1)"/>
+  
+  <!-- Graduation Cap -->
+  <path d="M16 6L6 12L16 18L24 13.5V22H26V12L16 6Z" fill="white"/>
+  
+  <!-- Book Pages -->
+  <path d="M8 17.5V21.5C8 23.2 11.1 24.5 16 24.5C20.9 24.5 24 23.2 24 21.5V17.5L16 22L8 17.5Z" fill="white" opacity="0.8"/>
+  
+  <!-- Decorative Dot -->
+  <circle cx="16" cy="12" r="1" fill="white" opacity="0.6"/>
+</svg>
