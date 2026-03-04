@@ -3,28 +3,26 @@ import { prisma } from "@/lib/db";
 
 /**
  * GET /api/admin/registrations
- * Retrieve all pending registration requests for admin review
- * 
- * @query status - Filter by status (PENDING, APPROVED, REJECTED) - optional
- * @returns List of registration requests with user details
+ * Fetch all registration requests with optional filtering
  */
 export async function GET(request: NextRequest) {
     try {
-        // TODO: Add authentication check to ensure user is an ADMINISTRATOR
-        // For now, we'll proceed without auth for development
-
         const searchParams = request.nextUrl.searchParams;
-        const status = searchParams.get("status");
+        const status = searchParams.get("status") || "PENDING";
+        const role = searchParams.get("role");
 
-        // Build query filter
-        const whereClause: any = {};
-        if (status) {
-            whereClause.status = status;
+        const where: any = {
+            status: status
+        };
+
+        if (role) {
+            where.user = {
+                role: role
+            };
         }
 
-        // Fetch registrations with user and profile details
         const registrations = await prisma.userRegistration.findMany({
-            where: whereClause,
+            where,
             include: {
                 user: {
                     include: {
@@ -37,16 +35,15 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        // Format the response data
-        const formattedRegistrations = registrations.map(reg => ({
+        const formattedData = registrations.map(reg => ({
             id: reg.id,
             userId: reg.userId,
             email: reg.user.email,
-            role: reg.user.role,
             firstName: reg.user.profile?.firstName,
             lastName: reg.user.profile?.lastName,
             phone: reg.user.profile?.phone,
             address: reg.user.profile?.address,
+            role: reg.user.role,
             status: reg.status,
             submittedAt: reg.submittedAt,
             reviewedAt: reg.reviewedAt,
@@ -56,14 +53,14 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            data: formattedRegistrations,
-            count: formattedRegistrations.length
+            data: formattedData,
+            count: formattedData.length
         });
 
     } catch (error) {
         console.error("Fetch registrations error:", error);
         return NextResponse.json(
-            { error: "Internal server error" },
+            { error: "Failed to fetch registrations" },
             { status: 500 }
         );
     }

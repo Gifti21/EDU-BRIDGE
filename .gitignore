@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# database
+*.db
+*.db-journal
+/prisma/dev.db
+
+# documentation (optional - remove if you want to keep these)
+ADMIN_IMPLEMENTATION_PLAN.md
+COMPLETE_ADMIN_SYSTEM_STATUS.md
+FINAL_STATUS_AND_NEXT_STEPS.md
+QUICK_TEST.md
+TESTING_GUIDE.md
+
+# kiro workspace files
+.kiro/

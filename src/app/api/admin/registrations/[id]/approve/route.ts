@@ -3,23 +3,20 @@ import { prisma } from "@/lib/db";
 
 /**
  * POST /api/admin/registrations/[id]/approve
- * Approve a pending user registration request
- * 
- * @param id - Registration request ID
- * @body reviewedBy - Admin user ID who approved the request
- * @returns Updated registration status
+ * Approve a user registration request
  */
 export async function POST(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = params;
+        const registrationId = params.id;
         const body = await request.json();
-        const { reviewedBy } = body;
+        const { adminId } = body;
 
+        // Find the registration
         const registration = await prisma.userRegistration.findUnique({
-            where: { id },
+            where: { id: registrationId },
             include: { user: true }
         });
 
@@ -37,50 +34,38 @@ export async function POST(
             );
         }
 
-        const [updatedRegistration, updatedUser] = await prisma.$transaction([
+        // Update registration and user in a transaction
+        const result = await prisma.$transaction([
             prisma.userRegistration.update({
-                where: { id },
+                where: { id: registrationId },
                 data: {
                     status: "APPROVED",
                     reviewedAt: new Date(),
-                    reviewedBy: reviewedBy || "admin"
+                    reviewedBy: adminId
                 }
             }),
             prisma.user.update({
                 where: { id: registration.userId },
                 data: {
-                    isApproved: true
+                    isApproved: true,
+                    approvedBy: adminId,
+                    approvedAt: new Date()
                 }
             })
         ]);
 
-        await prisma.auditLog.create({
-            data: {
-                userId: reviewedBy || "admin",
-                action: "APPROVE_REGISTRATION",
-                resource: "UserRegistration",
-                resourceId: id,
-                oldValues: JSON.stringify({ status: "PENDING", isApproved: false }),
-                newValues: JSON.stringify({ status: "APPROVED", isApproved: true })
-            }
-        });
+        // TODO: Send approval email notification to user
 
         return NextResponse.json({
             success: true,
             message: "Registration approved successfully",
-            data: {
-                registrationId: updatedRegistration.id,
-                userId: updatedUser.id,
-                email: updatedUser.email,
-                status: updatedRegistration.status,
-                reviewedAt: updatedRegistration.reviewedAt
-            }
+            data: result[0]
         });
 
     } catch (error) {
         console.error("Approval error:", error);
         return NextResponse.json(
-            { error: "Internal server error" },
+            { error: "Failed to approve registration" },
             { status: 500 }
         );
     }
