@@ -184,7 +184,7 @@ export function createAuthAuditLog(
     return {
         userId,
         action,
-        ipAddress: request.ip || request.headers.get('x-forwarded-for') || undefined,
+        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined,
         userAgent: request.headers.get('user-agent') || undefined,
         timestamp: new Date(),
         success,
