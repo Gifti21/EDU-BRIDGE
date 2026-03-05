@@ -55,18 +55,22 @@ export default function UsersManagementPage() {
     });
 
     useEffect(() => {
-        // Simulate loading users
-        setTimeout(() => {
-            setUsers([
-                { id: "1", name: "John Doe", email: "john@example.com", role: "STUDENT", status: "ACTIVE", createdAt: "2024-01-15", phone: "+251911234567", address: "Addis Ababa, Ethiopia", dateOfBirth: "2005-03-15" },
-                { id: "2", name: "Jane Smith", email: "jane@example.com", role: "TEACHER", status: "ACTIVE", createdAt: "2024-01-10", phone: "+251922345678", address: "Addis Ababa, Ethiopia", dateOfBirth: "1985-07-22" },
-                { id: "3", name: "Bob Johnson", email: "bob@example.com", role: "PARENT", status: "PENDING", createdAt: "2024-02-01", phone: "+251933456789", address: "Addis Ababa, Ethiopia", dateOfBirth: "1980-11-10" },
-                { id: "4", name: "Alice Williams", email: "alice@example.com", role: "STUDENT", status: "ACTIVE", createdAt: "2024-01-20", phone: "+251944567890", address: "Addis Ababa, Ethiopia", dateOfBirth: "2006-05-18" },
-                { id: "5", name: "Charlie Brown", email: "charlie@example.com", role: "ADMIN", status: "ACTIVE", createdAt: "2024-01-05", phone: "+251955678901", address: "Addis Ababa, Ethiopia", dateOfBirth: "1975-09-30" },
-            ]);
-            setLoading(false);
-        }, 1000);
+        fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch("/api/admin/users/list");
+            if (response.ok) {
+                const data = await response.json();
+                setUsers(data.users);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleApprove = () => {
         if (selectedUser) {
@@ -84,28 +88,45 @@ export default function UsersManagementPage() {
         }
     };
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
         if (selectedUser) {
-            setUsers(users.map(u => u.id === selectedUser.id ? {
-                ...u,
-                name: formData.name,
-                email: formData.email,
-                role: formData.role,
-                phone: formData.phone,
-                address: formData.address,
-                dateOfBirth: formData.dateOfBirth
-            } : u));
-            setShowEditModal(false);
-            setSelectedUser(null);
-            resetForm();
+            try {
+                const response = await fetch("/api/admin/users/update", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: selectedUser.id,
+                        ...formData
+                    }),
+                });
+
+                if (response.ok) {
+                    await fetchUsers();
+                    setShowEditModal(false);
+                    setSelectedUser(null);
+                    resetForm();
+                }
+            } catch (error) {
+                console.error("Error updating user:", error);
+            }
         }
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (selectedUser) {
-            setUsers(users.filter(u => u.id !== selectedUser.id));
-            setShowDeleteModal(false);
-            setSelectedUser(null);
+            try {
+                const response = await fetch(`/api/admin/users/delete?id=${selectedUser.id}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    await fetchUsers();
+                    setShowDeleteModal(false);
+                    setSelectedUser(null);
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+            }
         }
     };
 
@@ -143,9 +164,33 @@ export default function UsersManagementPage() {
         });
     };
 
+    const handleExport = () => {
+        const csvContent = [
+            ["Name", "Email", "Role", "Status", "Phone", "Address", "Date of Birth", "Joined Date"],
+            ...users.map(u => [
+                u.name || "",
+                u.email || "",
+                u.role || "",
+                u.status || "",
+                u.phone || "",
+                u.address || "",
+                u.dateOfBirth || "",
+                u.createdAt ? new Date(u.createdAt).toLocaleDateString() : ""
+            ])
+        ].map(row => row.join(",")).join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `users-export-${new Date().toISOString().split("T")[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+
     const filteredUsers = users.filter(user => {
-        const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = (user.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+            (user.email?.toLowerCase() || "").includes(searchTerm.toLowerCase());
         const matchesRole = filterRole === "all" || user.role === filterRole;
         const matchesStatus = filterStatus === "all" || user.status === filterStatus;
         return matchesSearch && matchesRole && matchesStatus;
@@ -193,7 +238,7 @@ export default function UsersManagementPage() {
                         <p className="text-gray-600 mt-1">Manage all users in the system</p>
                     </div>
                     <div className="flex items-center space-x-3">
-                        <Button className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">
+                        <Button onClick={handleExport} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">
                             <Download className="h-5 w-5 mr-2" />
                             Export Users
                         </Button>
@@ -330,11 +375,11 @@ export default function UsersManagementPage() {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold">
-                                                {user.name.charAt(0)}
+                                                {user.name?.charAt(0) || "?"}
                                             </div>
                                             <div className="ml-4">
-                                                <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                                <div className="text-sm text-gray-500">{user.email}</div>
+                                                <div className="text-sm font-medium text-gray-900">{user.name || "N/A"}</div>
+                                                <div className="text-sm text-gray-500">{user.email || "N/A"}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -359,7 +404,7 @@ export default function UsersManagementPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {new Date(user.createdAt).toLocaleDateString()}
+                                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div className="flex items-center justify-end space-x-2">
@@ -573,22 +618,22 @@ export default function UsersManagementPage() {
                         <div className="p-6">
                             <div className="flex items-center space-x-4 mb-6 pb-6 border-b">
                                 <div className="h-20 w-20 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-3xl font-bold">
-                                    {selectedUser.name.charAt(0)}
+                                    {selectedUser.name?.charAt(0) || "?"}
                                 </div>
                                 <div>
-                                    <h3 className="text-2xl font-bold text-gray-900">{selectedUser.name}</h3>
-                                    <p className="text-gray-600">{selectedUser.email}</p>
+                                    <h3 className="text-2xl font-bold text-gray-900">{selectedUser.name || "N/A"}</h3>
+                                    <p className="text-gray-600">{selectedUser.email || "N/A"}</p>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">Role</p>
-                                    <p className="font-medium text-gray-900">{selectedUser.role}</p>
+                                    <p className="font-medium text-gray-900">{selectedUser.role || "N/A"}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">Status</p>
-                                    <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${getStatusBadgeColor(selectedUser.status)}`}>
-                                        {selectedUser.status}
+                                    <span className={`px-3 py-1 inline-flex text-xs font-semibold rounded-full ${getStatusBadgeColor(selectedUser.status || "")}`}>
+                                        {selectedUser.status || "N/A"}
                                     </span>
                                 </div>
                                 <div>
@@ -605,7 +650,7 @@ export default function UsersManagementPage() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">Joined Date</p>
-                                    <p className="font-medium text-gray-900">{new Date(selectedUser.createdAt).toLocaleDateString()}</p>
+                                    <p className="font-medium text-gray-900">{selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : "N/A"}</p>
                                 </div>
                             </div>
                         </div>

@@ -38,8 +38,49 @@ export default function CoursesManagementPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterGrade, setFilterGrade] = useState("all");
     const [filterSemester, setFilterSemester] = useState("all");
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+    const [formData, setFormData] = useState({
+        code: "",
+        name: "",
+        description: "",
+        gradeLevel: "Grade 1",
+        subject: "",
+        hoursPerWeek: 5,
+        teacher: "",
+        academicYear: "2024-2025",
+        semester: "Semester 1"
+    });
 
     const gradeLevels = ["KG", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
+
+    const handleExport = () => {
+        const csvContent = [
+            ["Course Code", "Course Name", "Description", "Grade Level", "Subject", "Hours/Week", "Teacher", "Academic Year", "Semester", "Status"],
+            ...courses.map(c => [
+                c.code || "",
+                c.name || "",
+                c.description || "",
+                c.gradeLevel || "",
+                c.subject || "",
+                c.hoursPerWeek || "",
+                c.teacher || "",
+                c.academicYear || "",
+                c.semester || "",
+                c.status || ""
+            ])
+        ].map(row => row.join(",")).join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `courses-export-${new Date().toISOString().split("T")[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
 
     useEffect(() => {
         setTimeout(() => {
@@ -55,9 +96,9 @@ export default function CoursesManagementPage() {
     }, []);
 
     const filteredCourses = courses.filter(course => {
-        const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.teacher.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = (course.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+            (course.code?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
+            (course.teacher?.toLowerCase() || "").includes(searchTerm.toLowerCase());
         const matchesGrade = filterGrade === "all" || course.gradeLevel === filterGrade;
         const matchesSemester = filterSemester === "all" || course.semester === filterSemester;
         return matchesSearch && matchesGrade && matchesSemester;
@@ -89,11 +130,11 @@ export default function CoursesManagementPage() {
                         <p className="text-gray-600 mt-1">Manage courses for KG to Grade 12 - Academic Year 2024-2025</p>
                     </div>
                     <div className="flex items-center space-x-3">
-                        <Button className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">
+                        <Button onClick={handleExport} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm">
                             <Download className="h-5 w-5 mr-2" />
                             Export
                         </Button>
-                        <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg">
+                        <Button onClick={() => setShowCreateModal(true)} className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg">
                             <Plus className="h-5 w-5 mr-2" />
                             Add Course
                         </Button>
@@ -234,13 +275,18 @@ export default function CoursesManagementPage() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex items-center justify-end space-x-2">
-                                                <button className="text-gray-600 hover:text-gray-900 p-2 hover:bg-gray-50 rounded-lg transition-colors" title="View Details">
-                                                    <Eye className="h-4 w-4" />
-                                                </button>
-                                                <button className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Course">
+                                                <button
+                                                    onClick={() => { setSelectedCourse(course); setFormData({ code: course.code, name: course.name, description: course.description, gradeLevel: course.gradeLevel, subject: course.subject, hoursPerWeek: course.hoursPerWeek, teacher: course.teacher, academicYear: course.academicYear, semester: course.semester }); setShowEditModal(true); }}
+                                                    className="text-blue-600 hover:text-blue-900 p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Edit Course"
+                                                >
                                                     <Edit className="h-4 w-4" />
                                                 </button>
-                                                <button className="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors" title="Delete Course">
+                                                <button
+                                                    onClick={() => { setSelectedCourse(course); setShowDeleteModal(true); }}
+                                                    className="text-red-600 hover:text-red-900 p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete Course"
+                                                >
                                                     <Trash2 className="h-4 w-4" />
                                                 </button>
                                             </div>
@@ -257,6 +303,135 @@ export default function CoursesManagementPage() {
                 <div className="bg-white/90 border border-gray-200 rounded-xl p-12 text-center">
                     <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500">No courses found matching your criteria</p>
+                </div>
+            )}
+
+            {/* Create Course Modal */}
+            {showCreateModal && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-2xl">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-2xl font-bold">Add New Course</h2>
+                                <button onClick={() => setShowCreateModal(false)} className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Code *</label>
+                                    <input type="text" value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Name *</label>
+                                    <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                    <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Grade Level *</label>
+                                    <select value={formData.gradeLevel} onChange={(e) => setFormData({ ...formData, gradeLevel: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                        {gradeLevels.map(grade => <option key={grade} value={grade}>{grade}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                                    <input type="text" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Hours Per Week *</label>
+                                    <input type="number" value={formData.hoursPerWeek} onChange={(e) => setFormData({ ...formData, hoursPerWeek: parseInt(e.target.value) })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Teacher</label>
+                                    <input type="text" value={formData.teacher} onChange={(e) => setFormData({ ...formData, teacher: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-end space-x-3 p-6 bg-gray-50 rounded-b-2xl">
+                            <Button onClick={() => setShowCreateModal(false)} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</Button>
+                            <Button onClick={() => { setCourses([...courses, { id: String(courses.length + 1), ...formData, status: "ACTIVE" }]); setShowCreateModal(false); }} className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white">Create Course</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Course Modal */}
+            {showEditModal && selectedCourse && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-2xl">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-2xl font-bold">Edit Course</h2>
+                                <button onClick={() => setShowEditModal(false)} className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors">
+                                    <X className="h-6 w-6" />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Code *</label>
+                                    <input type="text" value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Name *</label>
+                                    <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                    <textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Grade Level *</label>
+                                    <select value={formData.gradeLevel} onChange={(e) => setFormData({ ...formData, gradeLevel: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                        {gradeLevels.map(grade => <option key={grade} value={grade}>{grade}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                                    <input type="text" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Hours Per Week *</label>
+                                    <input type="number" value={formData.hoursPerWeek} onChange={(e) => setFormData({ ...formData, hoursPerWeek: parseInt(e.target.value) })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Teacher</label>
+                                    <input type="text" value={formData.teacher} onChange={(e) => setFormData({ ...formData, teacher: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-end space-x-3 p-6 bg-gray-50 rounded-b-2xl">
+                            <Button onClick={() => setShowEditModal(false)} className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</Button>
+                            <Button onClick={() => { setCourses(courses.map(c => c.id === selectedCourse.id ? { ...c, ...formData } : c)); setShowEditModal(false); }} className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white">Save Changes</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Course Modal */}
+            {showDeleteModal && selectedCourse && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+                        <div className="p-6">
+                            <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                                <Trash2 className="h-6 w-6 text-red-600" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 text-center mb-2">Delete Course</h3>
+                            <p className="text-gray-600 text-center mb-6">
+                                Are you sure you want to delete <span className="font-semibold">{selectedCourse.name}</span>? This action cannot be undone.
+                            </p>
+                            <div className="flex items-center space-x-3">
+                                <Button onClick={() => setShowDeleteModal(false)} className="flex-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</Button>
+                                <Button onClick={() => { setCourses(courses.filter(c => c.id !== selectedCourse.id)); setShowDeleteModal(false); }} className="flex-1 bg-red-600 hover:bg-red-700 text-white">Delete</Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
