@@ -206,6 +206,8 @@ export const ROLE_PERMISSIONS = {
     ],
 } as const;
 
+type Permission = typeof ROLE_PERMISSIONS[keyof typeof ROLE_PERMISSIONS][number];
+
 /**
  * Check if user has specific permission
  * @param role - User role
@@ -216,8 +218,8 @@ export function hasPermission(
     role: keyof typeof ROLE_PERMISSIONS,
     permission: string
 ): boolean {
-    const permissions = ROLE_PERMISSIONS[role];
-    return permissions ? permissions.includes(permission as Permission) : false;
+    const permissions = ROLE_PERMISSIONS[role] as readonly string[];
+    return permissions ? permissions.includes(permission) : false;
 }
 
 /**
