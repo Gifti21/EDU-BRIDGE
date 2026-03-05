@@ -217,7 +217,7 @@ export function hasPermission(
     permission: string
 ): boolean {
     const permissions = ROLE_PERMISSIONS[role];
-    return permissions ? permissions.includes(permission as any) : false;
+    return permissions ? permissions.includes(permission as Permission) : false;
 }
 
 /**
