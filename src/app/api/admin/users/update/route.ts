@@ -13,16 +13,39 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: "User ID is required" }, { status: 400 });
         }
 
+        // Split name into firstName and lastName
+        const nameParts = name?.split(" ") || [];
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || "";
+
+        // Update user and profile
         const updatedUser = await prisma.user.update({
             where: { id },
             data: {
-                name,
                 email,
                 role,
-                phone,
-                address,
-                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+                profile: {
+                    upsert: {
+                        create: {
+                            firstName,
+                            lastName,
+                            phone,
+                            address,
+                            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+                        },
+                        update: {
+                            firstName,
+                            lastName,
+                            phone,
+                            address,
+                            dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+                        }
+                    }
+                }
             },
+            include: {
+                profile: true
+            }
         });
 
         return NextResponse.json({ user: updatedUser });
