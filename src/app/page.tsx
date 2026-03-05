@@ -143,20 +143,20 @@ export default function HomePage() {
       <style jsx>{styles}</style>
       {/* Navigation Header */}
       <nav className="fixed top-0 w-full z-50 bg-gradient-to-r from-sky-300 to-blue-400 border-b border-sky-200 shadow-lg">
-        <div className=" max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-3 sm:py-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <Image
                 src="/pictures/logo.jpg"
                 alt="EduBridge Logo"
-                width={100}
-                height={100}
-                className="rounded-lg"
+                width={60}
+                height={60}
+                className="rounded-lg w-12 h-12 sm:w-16 sm:h-16"
               />
-              <span className="text-3xl font-bold text-black">EduBridge</span>
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-black">EduBridge</span>
             </div>
 
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center space-x-6">
               <Link href="#features" className="text-slate-800 hover:text-slate-900 hover:bg-white/20 px-4 py-2 rounded-lg font-semibold transition-all duration-300 backdrop-blur-sm">
                 Features
               </Link>
@@ -171,13 +171,13 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Link href="/auth/login">
-                <Button variant="ghost" className="text-slate-800 hover:text-slate-900 hover:bg-white/30 font-semibold backdrop-blur-sm border border-white/20">
+                <Button variant="ghost" className="text-slate-800 hover:text-slate-900 hover:bg-white/30 font-semibold backdrop-blur-sm border border-white/20 text-sm sm:text-base px-3 sm:px-4 py-2">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/auth/register">
+              <Link href="/auth/register" className="hidden sm:block">
                 <Button className="bg-slate-800 hover:bg-slate-900 text-white shadow-xl font-semibold border border-slate-700 hover:border-slate-600 transition-all duration-300">
                   Get Started
                 </Button>
@@ -188,7 +188,7 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-20 overflow-hidden">
+      <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-20 overflow-hidden">
         {/* Beautiful School Background with Animation */}
         <div className="absolute inset-0">
           <div
@@ -211,31 +211,31 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="bg-black/10 rounded-3xl p-8 mx-auto max-w-5xl">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight drop-shadow-lg mb-8">
+            <div className="bg-black/10 rounded-3xl p-4 sm:p-6 md:p-8 mx-auto max-w-5xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight drop-shadow-lg mb-4 sm:mb-6 md:mb-8">
                 <span className="bg-gradient-to-r from-red-500 via-orange-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">
                   <TypewriterText text="EduBridge" delay={300} speed={100} />
                 </span>
               </h1>
-              <h2 className="text-2xl md:text-4xl font-bold text-white mb-6">
+              <h2 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold text-white mb-4 sm:mb-6 px-2">
                 <TypewriterText text="Bridge Communication Gaps in K-12 Education" delay={2000} speed={60} />
               </h2>
-              <p className="text-xl md:text-2xl text-gray-100 max-w-4xl mx-auto mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 max-w-4xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2">
                 Eliminate fragmented communication, ensure academic transparency, and replace manual processes with our comprehensive digital ecosystem for students, teachers, parents, and administrators.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 mt-12">
-              <Link href="/auth/register">
-                <Button size="lg" className="bg-slate-800 hover:bg-slate-900 text-white px-8 py-4 text-lg font-bold rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-slate-700 hover:border-slate-600">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16 mt-8 sm:mt-12 px-4">
+              <Link href="/auth/register" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-slate-700 hover:border-slate-600">
                   Start Your Digital Transformation
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
-              <Link href="/demo">
-                <Button variant="outline" size="lg" className="border-white/70 text-white hover:bg-white/25 hover:text-slate-900 px-8 py-4 text-lg font-semibold rounded-lg backdrop-blur-md border-2 hover:border-white transition-all duration-300">
+              <Link href="/demo" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/70 text-white hover:bg-white/25 hover:text-slate-900 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg backdrop-blur-md border-2 hover:border-white transition-all duration-300">
                   See Live Demo
-                  <Sparkles className="ml-2 h-5 w-5" />
+                  <Sparkles className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Button>
               </Link>
             </div>
@@ -244,30 +244,30 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
+      <section id="features" className="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent mb-4 px-2">
               <TypewriterText text="Everything You Need in One Platform" delay={600} speed={60} />
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Comprehensive school management features designed for modern educational institutions
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <Card key={index} className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2">
                 <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 ${feature.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg group-hover:shadow-xl`}>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 ${feature.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg group-hover:shadow-xl`}>
                     <div className={`${feature.color} group-hover:scale-110 transition-transform duration-300`}>
                       {feature.icon}
                     </div>
                   </div>
-                  <CardTitle className="text-xl font-bold text-gray-900">{feature.title}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl font-bold text-gray-900">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-center">{feature.description}</p>
+                  <p className="text-sm sm:text-base text-gray-600 text-center">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -276,18 +276,18 @@ export default function HomePage() {
       </section>
 
       {/* User Benefits Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 px-2">
               <TypewriterText text="Built for Every Education Stakeholder" delay={1000} speed={65} />
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Discover how EduBridge transforms the experience for each member of your school community
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {/* Students */}
             <div className="relative overflow-hidden rounded-2xl shadow-xl group cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:-translate-y-2">
               <div
@@ -296,28 +296,28 @@ export default function HomePage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 to-cyan-900/50 group-hover:from-blue-800/60 group-hover:to-cyan-800/60 transition-all duration-500"></div>
               </div>
-              <div className="relative p-8 h-80 flex flex-col justify-end">
-                <div className="bg-white/50 backdrop-blur-md rounded-xl p-6 border border-white/40 group-hover:bg-white/70 group-hover:border-white/60 group-hover:shadow-lg transition-all duration-500 transform group-hover:scale-105">
-                  <h3 className="text-2xl font-bold text-blue mb-4 flex items-center">
-                    <Users className="h-8 w-8 mr-3 text-blue-300" />
+              <div className="relative p-4 sm:p-6 md:p-8 h-64 sm:h-72 md:h-80 flex flex-col justify-end">
+                <div className="bg-white/50 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/40 group-hover:bg-white/70 group-hover:border-white/60 group-hover:shadow-lg transition-all duration-500 transform group-hover:scale-105">
+                  <h3 className="text-xl sm:text-2xl font-bold text-blue mb-3 sm:mb-4 flex items-center">
+                    <Users className="h-6 w-6 sm:h-8 sm:w-8 mr-2 sm:mr-3 text-blue-300" />
                     Students
                   </h3>
-                  <ul className="space-y-2 text-purple/90">
+                  <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-purple/90">
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-blue-300 rounded-full mr-3"></span>
-                      Access grades and assignments instantly
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Access grades and assignments instantly</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-blue-300 rounded-full mr-3"></span>
-                      Download course materials anytime
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Download course materials anytime</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-blue-300 rounded-full mr-3"></span>
-                      Track attendance and academic progress
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Track attendance and academic progress</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-blue-300 rounded-full mr-3"></span>
-                      Submit assignments digitally
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Submit assignments digitally</span>
                     </li>
                   </ul>
                 </div>
@@ -335,28 +335,28 @@ export default function HomePage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-green-900/50 to-emerald-900/50 group-hover:from-green-800/60 group-hover:to-emerald-800/60 transition-all duration-500"></div>
               </div>
-              <div className="relative p-8 h-80 flex flex-col justify-end">
-                <div className="bg-white/50 backdrop-blur-md rounded-xl p-6 border border-white/40">
-                  <h3 className="text-2xl font-bold text-blue mb-4 flex items-center">
-                    <BookOpen className="h-8 w-8 mr-3 text-green-300" />
+              <div className="relative p-4 sm:p-6 md:p-8 h-64 sm:h-72 md:h-80 flex flex-col justify-end">
+                <div className="bg-white/50 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/40">
+                  <h3 className="text-xl sm:text-2xl font-bold text-blue mb-3 sm:mb-4 flex items-center">
+                    <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 mr-2 sm:mr-3 text-green-300" />
                     Teachers
                   </h3>
-                  <ul className="space-y-2 text-purple/90">
+                  <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-purple/90">
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-green-300 rounded-full mr-3"></span>
-                      Update grades and attendance in real-time
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Update grades and attendance in real-time</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-green-300 rounded-full mr-3"></span>
-                      Communicate directly with parents
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Communicate directly with parents</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-green-300 rounded-full mr-3"></span>
-                      Manage assignments and course materials
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Manage assignments and course materials</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-green-300 rounded-full mr-3"></span>
-                      Generate academic reports instantly
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Generate academic reports instantly</span>
                     </li>
                   </ul>
                 </div>
@@ -374,28 +374,28 @@ export default function HomePage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-pink-900/50"></div>
               </div>
-              <div className="relative p-8 h-80 flex flex-col justify-end">
-                <div className="bg-white/50 backdrop-blur-md rounded-xl p-6 border border-white/40">
-                  <h3 className="text-2xl font-bold text-blue mb-4 flex items-center">
-                    <MessageSquare className="h-8 w-8 mr-3 text-purple-300" />
+              <div className="relative p-4 sm:p-6 md:p-8 h-64 sm:h-72 md:h-80 flex flex-col justify-end">
+                <div className="bg-white/50 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/40">
+                  <h3 className="text-xl sm:text-2xl font-bold text-blue mb-3 sm:mb-4 flex items-center">
+                    <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 mr-2 sm:mr-3 text-purple-300" />
                     Parents
                   </h3>
-                  <ul className="space-y-2 text-purple/90">
+                  <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-purple/90">
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-purple-300 rounded-full mr-3"></span>
-                      Monitor child's academic progress live
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Monitor child's academic progress live</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-purple-300 rounded-full mr-3"></span>
-                      Receive instant attendance notifications
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Receive instant attendance notifications</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-purple-300 rounded-full mr-3"></span>
-                      Pay school fees securely online
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Pay school fees securely online</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-purple-300 rounded-full mr-3"></span>
-                      Direct communication with teachers
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Direct communication with teachers</span>
                     </li>
                   </ul>
                 </div>
@@ -426,28 +426,28 @@ export default function HomePage() {
                 <source src="/videos/admin-management.webm" type="video/webm" />
               </video>
               <div className="absolute inset-0 bg-gradient-to-br from-orange-900/50 to-red-900/50"></div>
-              <div className="relative p-8 h-80 flex flex-col justify-end">
-                <div className="bg-white/50 backdrop-blur-md rounded-xl p-6 border border-white/40">
-                  <h3 className="text-2xl font-bold text-blue mb-4 flex items-center">
-                    <BarChart3 className="h-8 w-8 mr-3 text-orange-300" />
+              <div className="relative p-4 sm:p-6 md:p-8 h-64 sm:h-72 md:h-80 flex flex-col justify-end">
+                <div className="bg-white/50 backdrop-blur-md rounded-xl p-4 sm:p-6 border border-white/40">
+                  <h3 className="text-xl sm:text-2xl font-bold text-blue mb-3 sm:mb-4 flex items-center">
+                    <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 mr-2 sm:mr-3 text-orange-300" />
                     Administrators
                   </h3>
-                  <ul className="space-y-2 text-purple/90">
+                  <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-purple/90">
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-orange-300 rounded-full mr-3"></span>
-                      Manage all user accounts and permissions
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Manage all user accounts and permissions</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-orange-300 rounded-full mr-3"></span>
-                      Generate comprehensive school reports
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Generate comprehensive school reports</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-orange-300 rounded-full mr-3"></span>
-                      Oversee financial transactions and billing
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Oversee financial transactions and billing</span>
                     </li>
                     <li className="flex items-center">
-                      <span className="w-2 h-2 bg-orange-300 rounded-full mr-3"></span>
-                      Create courses and manage schedules
+                      <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-300 rounded-full mr-2 sm:mr-3 flex-shrink-0"></span>
+                      <span>Create courses and manage schedules</span>
                     </li>
                   </ul>
                 </div>
@@ -458,7 +458,7 @@ export default function HomePage() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-20 relative overflow-hidden">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat animate-gentle-zoom"
@@ -482,21 +482,21 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-purple-900/50 to-indigo-900/60"></div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-4 px-2">
             <TypewriterText text="Ready to Transform Your School?" delay={1500} speed={70} />
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8 px-4">
             Join thousands of schools worldwide that trust EduBridge
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
-              <Button size="lg" className="bg-white text-slate-800 hover:bg-slate-50 hover:text-slate-900 px-8 py-4 text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 hover:border-slate-300">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+            <Link href="/auth/register" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-slate-800 hover:bg-slate-50 hover:text-slate-900 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 hover:border-slate-300">
                 Start Free Trial
-                <Zap className="ml-2 h-5 w-5" />
+                <Zap className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-white/70 text-white hover:bg-white/25 hover:text-slate-900 px-8 py-4 text-lg font-semibold rounded-lg backdrop-blur-md border-2 hover:border-white transition-all duration-300">
+            <Link href="/contact" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/70 text-white hover:bg-white/25 hover:text-slate-900 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg backdrop-blur-md border-2 hover:border-white transition-all duration-300">
                 Contact Us
               </Button>
             </Link>
@@ -590,7 +590,7 @@ export default function HomePage() {
               &copy; 2025 EduBridge Technologies. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              
+
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                 <span>All Systems Operational</span>
