@@ -18,10 +18,10 @@ import {
     EyeOff,
     Shield
 } from "lucide-react";
-import { passwordResetSchema, type PasswordResetInput } from "@/lib/validations/auth";
+import { passwordResetFormSchema, type PasswordResetFormInput } from "@/lib/validations/auth";
 
 // Extract only password and confirmPassword for the form
-type ResetPasswordForm = Omit<PasswordResetInput, 'token'>;
+type ResetPasswordForm = PasswordResetFormInput;
 
 function ResetPasswordContent() {
     const router = useRouter();
@@ -39,7 +39,7 @@ function ResetPasswordContent() {
         handleSubmit,
         formState: { errors },
     } = useForm<ResetPasswordForm>({
-        resolver: zodResolver(passwordResetSchema.omit({ token: true }))
+        resolver: zodResolver(passwordResetFormSchema)
     });
 
     useEffect(() => {

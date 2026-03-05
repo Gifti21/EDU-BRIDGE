@@ -74,6 +74,19 @@ export const passwordResetSchema = z
     });
 
 /**
+ * Password reset form schema (without token)
+ */
+export const passwordResetFormSchema = z
+    .object({
+        password: passwordSchema,
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ['confirmPassword'],
+    });
+
+/**
  * Change password schema
  */
 export const changePasswordSchema = z
@@ -100,4 +113,5 @@ export type PasswordResetRequestInput = z.infer<
     typeof passwordResetRequestSchema
 >;
 export type PasswordResetInput = z.infer<typeof passwordResetSchema>;
+export type PasswordResetFormInput = z.infer<typeof passwordResetFormSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
